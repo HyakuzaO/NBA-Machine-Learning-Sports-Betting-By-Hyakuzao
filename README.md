@@ -1,19 +1,38 @@
 # NBA Sports Betting Using Machine Learning 🏀
 <img src="https://github.com/kyleskom/NBA-Machine-Learning-Sports-Betting/blob/master/Screenshots/output.png" width="1010" height="292" />
 
-A machine learning AI used to predict the winners and under/overs of NBA games. Takes all team data from the 2007-08 season to current season, matched with odds of those games, using a neural network to predict winning bets for today's games. Achieves ~69% accuracy on money lines and ~55% on under/overs. Outputs expected value for teams money lines to provide better insight. The fraction of your bankroll to bet based on the Kelly Criterion is also outputted. Note that a popular, less risky approach is to bet 50% of the stake recommended by the Kelly Criterion.
+A machine learning AI used to predict the winners and under/overs of NBA games. Takes all team data from the 2021-22 season to current season, matched with odds of those games, using a neural network to predict winning bets for today's games. Achieves ~69% auc on money lines and ~55% on under/overs. Outputs expected value for teams money lines to provide better insight. The fraction of your bankroll to bet based on the Kelly Criterion is also outputted. Note that a popular, less risky approach is to bet 50% of the stake recommended by the Kelly Criterion.
 ## Packages Used
 
-Use Python 3.11. In particular the packages/libraries used are...
+# NBA Machine Learning Sports Betting
 
-* Tensorflow - Machine learning library
-* XGBoost - Gradient boosting framework
-* Numpy - Package for scientific computing in Python
-* Pandas - Data manipulation and analysis
-* Colorama - Color text output
-* Tqdm - Progress bars
-* Requests - Http library
-* Scikit_learn - Machine learning library
+A predictive system for NBA games built with **Python 3.11**, using advanced machine learning models to estimate win probabilities and totals (Over/Under), compute **Expected Value (EV)**, and apply the **Kelly Criterion** for bankroll management.  
+Includes **Optuna** for hyperparameter optimization.
+
+---
+
+## 🧠 Tech Stack
+
+- **TensorFlow** – Deep learning and neural network training  
+- **XGBoost** – Gradient boosting framework  
+- **Optuna** – Hyperparameter optimization (HPO)  
+- **NumPy** – Scientific computing  
+- **Pandas** – Data manipulation and analysis  
+- **scikit-learn** – Metrics, preprocessing, and model evaluation  
+- **tqdm** – Progress bars  
+- **colorama** – Colored console output  
+- **requests** – HTTP data fetching  
+
+---
+
+## ⚙️ Requirements
+
+- Python **3.11**  
+- Install dependencies:
+
+```bash
+pip install -r requirements.txt
+
 
 ## Usage
 
