@@ -8,13 +8,17 @@ from src.Utils import Expected_Value
 from src.Utils import Kelly_Criterion as kc
 
 
+
+THRESHOLD_ML = 0.594  
+THRESHOLD_OU = 0.5  
+
 # from src.Utils.Dictionaries import team_index_current
 # from src.Utils.tools import get_json_data, to_data_frame, get_todays_games_json, create_todays_games
 init()
 xgb_ml = xgb.Booster()
-xgb_ml.load_model('Models/XGBoost_Models/XGBoost_68.7%_ML-4.json')
+xgb_ml.load_model('Models/XGBoost_Models/XGBoost_0.712AUC_ML-4.json')
 xgb_uo = xgb.Booster()
-xgb_uo.load_model('Models/XGBoost_Models/XGBoost_53.7%_UO-9.json')
+xgb_uo.load_model('Models/XGBoost_Models/XGBoost_56.8%_UO-9.json')
 
 
 def xgb_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_odds, kelly_criterion):
@@ -37,34 +41,46 @@ def xgb_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team
     for game in games:
         home_team = game[0]
         away_team = game[1]
-        winner = int(np.argmax(ml_predictions_array[count]))
-        under_over = int(np.argmax(ou_predictions_array[count]))
-        winner_confidence = ml_predictions_array[count]
-        un_confidence = ou_predictions_array[count]
+
+        # Probabilidades (multi:softprob -> [ [p_class0, p_class1] ])
+        prob_home_win = ml_predictions_array[count][0][1]  # classe 1 = vitória casa
+        prob_away_win = ml_predictions_array[count][0][0]
+
+        # Aplica THRESHOLD_ML em vez de argmax
+        winner = 1 if prob_home_win >= THRESHOLD_ML else 0
+
+        # OU: assumindo indice 1 = OVER e 0 = UNDER (mantém lógica original)
+        prob_over = ou_predictions_array[count][0][1]
+        prob_under = ou_predictions_array[count][0][0]
+
+        # Aplica THRESHOLD_OU em vez de argmax
+        under_over = 1 if prob_over >= THRESHOLD_OU else 0
+
+        # Confiança para imprimir (em %)
         if winner == 1:
-            winner_confidence = round(winner_confidence[0][1] * 100, 1)
+            winner_confidence = round(prob_home_win * 100, 1)
             if under_over == 0:
-                un_confidence = round(ou_predictions_array[count][0][0] * 100, 1)
+                un_confidence = round(prob_under * 100, 1)
                 print(
                     Fore.GREEN + home_team + Style.RESET_ALL + Fore.CYAN + f" ({winner_confidence}%)" + Style.RESET_ALL + ' vs ' + Fore.RED + away_team + Style.RESET_ALL + ': ' +
                     Fore.MAGENTA + 'UNDER ' + Style.RESET_ALL + str(
                         todays_games_uo[count]) + Style.RESET_ALL + Fore.CYAN + f" ({un_confidence}%)" + Style.RESET_ALL)
             else:
-                un_confidence = round(ou_predictions_array[count][0][1] * 100, 1)
+                un_confidence = round(prob_over * 100, 1)
                 print(
                     Fore.GREEN + home_team + Style.RESET_ALL + Fore.CYAN + f" ({winner_confidence}%)" + Style.RESET_ALL + ' vs ' + Fore.RED + away_team + Style.RESET_ALL + ': ' +
                     Fore.BLUE + 'OVER ' + Style.RESET_ALL + str(
                         todays_games_uo[count]) + Style.RESET_ALL + Fore.CYAN + f" ({un_confidence}%)" + Style.RESET_ALL)
         else:
-            winner_confidence = round(winner_confidence[0][0] * 100, 1)
+            winner_confidence = round(prob_away_win * 100, 1)
             if under_over == 0:
-                un_confidence = round(ou_predictions_array[count][0][0] * 100, 1)
+                un_confidence = round(prob_under * 100, 1)
                 print(
                     Fore.RED + home_team + Style.RESET_ALL + ' vs ' + Fore.GREEN + away_team + Style.RESET_ALL + Fore.CYAN + f" ({winner_confidence}%)" + Style.RESET_ALL + ': ' +
                     Fore.MAGENTA + 'UNDER ' + Style.RESET_ALL + str(
                         todays_games_uo[count]) + Style.RESET_ALL + Fore.CYAN + f" ({un_confidence}%)" + Style.RESET_ALL)
             else:
-                un_confidence = round(ou_predictions_array[count][0][1] * 100, 1)
+                un_confidence = round(prob_over * 100, 1)
                 print(
                     Fore.RED + home_team + Style.RESET_ALL + ' vs ' + Fore.GREEN + away_team + Style.RESET_ALL + Fore.CYAN + f" ({winner_confidence}%)" + Style.RESET_ALL + ': ' +
                     Fore.BLUE + 'OVER ' + Style.RESET_ALL + str(
