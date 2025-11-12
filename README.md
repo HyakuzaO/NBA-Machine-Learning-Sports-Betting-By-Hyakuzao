@@ -30,14 +30,14 @@ Includes **Optuna** for hyperparameter optimization.
 - Python **3.11**  
 - Install dependencies:
 
-```bash
+
 pip install -r requirements.txt
 
 
 Make sure all packages above are installed.
 
-```bash
-$ git clone https://github.com/kyleskom/NBA-Machine-Learning-Sports-Betting.git
+
+$ git clone https://github.com/HyakuzaO/NBA-Machine-Learning-Sports-Betting-By-HyakuzaO.git
 $ cd NBA-Machine-Learning-Sports-Betting
 $ pip3 install -r requirements.txt
 $ python3 main.py -xgb -odds=fanduel
