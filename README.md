@@ -74,4 +74,6 @@ cd ../Train-Models
 python -m XGBoost_Model_ML
 python -m XGBoost_Model_UO
 
+After train the models set the Threshold found for ML predicitons in /src/Predict XGBoost_Runner.py
+
 
